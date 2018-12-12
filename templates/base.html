@@ -27,11 +27,9 @@
 <div class="container">
     <header id="site-header">
         <div class="row">
-            <div class="col-md-4 col-sm-5 col-xs-8">
-                <div class="logo">
-                    <h1><a href="index.html"><b>Black</b> &amp; White</a></h1>
-                </div>
-            </div><!-- col-md-4 -->
+            <div class="logo">
+                <h1><a href="{% url 'blog:index'%}"><b>Black</b> &amp; White</a></h1>
+            </div>
             <div class="col-md-8 col-sm-7 col-xs-4">
                 <nav class="main-nav" role="navigation">
                     <div class="navbar-header">
@@ -106,11 +104,11 @@
                             {% get_categories as category_list %}
                                 <ul>
                                     {% for category in category_list %}
-                                    <li>
-                                        <a href="#">{{ category.name }} <span class="post-count">(13)</span></a>
-                                    </li>
+                                        <li>
+                                            <a href="{% url 'blog:category' category.pk %}">{{ category.name }}</a>
+                                        </li>
                                     {% empty %}
-                                        暂无分类！
+                                            暂无分类！
                                     {% endfor %}
                                 </ul>
                     </div>

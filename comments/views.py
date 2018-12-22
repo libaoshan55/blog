@@ -1,54 +1,54 @@
-from django.shortcuts import render,get_object_or_404,redirect
-from blog.models import  Post
+from django.shortcuts import render, get_object_or_404, redirect
+from blog.models import Post
 
-#from .models import Comment
 from .models import Comment
 from .forms import CommentForm
 
-# Create your views here.
 
-def post_comment(request,post_pk):
-    # ÏÈ»ñÈ¡±»ÆÀÂÛµÄÎÄÕÂ£¬ÒòÎªºóÃæĞèÒª°ÑÆÀÂÛºÍ±»ÆÀÂÛµÄÎÄÕÂ¹ØÁªÆğÀ´¡£
-    # ÕâÀïÎÒÃÇÊ¹ÓÃÁË Django Ìá¹©µÄÒ»¸ö¿ì½İº¯Êı get_object_or_404£¬
-    # Õâ¸öº¯ÊıµÄ×÷ÓÃÊÇµ±»ñÈ¡µÄÎÄÕÂ£¨Post£©´æÔÚÊ±£¬Ôò»ñÈ¡£»·ñÔò·µ»Ø 404 Ò³Ãæ¸øÓÃ»§¡£
-    #£¿£¿POSTºÍpost_pk´ÓÄÄÀï´«¹ıÀ´µÄ£¿
-    post=get_object_or_404(Post,pk=post_pk)
-    # ÓÃ»§Ìá½»µÄÊı¾İ´æÔÚ request.POST ÖĞ£¬ÕâÊÇÒ»¸öÀà×Öµä¶ÔÏó¡£
-    # ÎÒÃÇÀûÓÃÕâĞ©Êı¾İ¹¹ÔìÁË CommentForm µÄÊµÀı£¬ÕâÑù Django µÄ±íµ¥¾ÍÉú³ÉÁË¡£
-    #request°üº¬ÇëÇóµÄ·½Ê½ºÍÇëÇóµÄÊı¾İ£¬request.POST´ú±íµÄÊÇÇëÇóÊı¾İ
+def post_comment(request, post_pk):
+    # å…ˆè·å–è¢«è¯„è®ºçš„æ–‡ç« ï¼Œå› ä¸ºåé¢éœ€è¦æŠŠè¯„è®ºå’Œè¢«è¯„è®ºçš„æ–‡ç« å…³è”èµ·æ¥ã€‚
+    # è¿™é‡Œæˆ‘ä»¬ä½¿ç”¨äº† Django æä¾›çš„ä¸€ä¸ªå¿«æ·å‡½æ•° get_object_or_404ï¼Œ
+    # è¿™ä¸ªå‡½æ•°çš„ä½œç”¨æ˜¯å½“è·å–çš„æ–‡ç« ï¼ˆPostï¼‰å­˜åœ¨æ—¶ï¼Œåˆ™è·å–ï¼›å¦åˆ™è¿”å› 404 é¡µé¢ç»™ç”¨æˆ·ã€‚
+    post = get_object_or_404(Post, pk=post_pk)
+
+    # HTTP è¯·æ±‚æœ‰ get å’Œ post ä¸¤ç§ï¼Œä¸€èˆ¬ç”¨æˆ·é€šè¿‡è¡¨å•æäº¤æ•°æ®éƒ½æ˜¯é€šè¿‡ post è¯·æ±‚ï¼Œ
+    # å› æ­¤åªæœ‰å½“ç”¨æˆ·çš„è¯·æ±‚ä¸º post æ—¶æ‰éœ€è¦å¤„ç†è¡¨å•æ•°æ®ã€‚
     if request.method == 'POST':
+        # ç”¨æˆ·æäº¤çš„æ•°æ®å­˜åœ¨ request.POST ä¸­ï¼Œè¿™æ˜¯ä¸€ä¸ªç±»å­—å…¸å¯¹è±¡ã€‚
+        # æˆ‘ä»¬åˆ©ç”¨è¿™äº›æ•°æ®æ„é€ äº† CommentForm çš„å®ä¾‹ï¼Œè¿™æ · Django çš„è¡¨å•å°±ç”Ÿæˆäº†ã€‚
         form = CommentForm(request.POST)
 
-        # µ±µ÷ÓÃ form.is_valid() ·½·¨Ê±£¬Django ×Ô¶¯°ïÎÒÃÇ¼ì²é±íµ¥µÄÊı¾İÊÇ·ñ·ûºÏ¸ñÊ½ÒªÇó¡£
+        # å½“è°ƒç”¨ form.is_valid() æ–¹æ³•æ—¶ï¼ŒDjango è‡ªåŠ¨å¸®æˆ‘ä»¬æ£€æŸ¥è¡¨å•çš„æ•°æ®æ˜¯å¦ç¬¦åˆæ ¼å¼è¦æ±‚ã€‚
         if form.is_valid():
-            # ¼ì²éµ½Êı¾İÊÇºÏ·¨µÄ£¬µ÷ÓÃ±íµ¥µÄ save ·½·¨±£´æÊı¾İµ½Êı¾İ¿â£¬
-            # commit=False µÄ×÷ÓÃÊÇ½ö½öÀûÓÃ±íµ¥µÄÊı¾İÉú³É Comment Ä£ĞÍÀàµÄÊµÀı£¬µ«»¹²»±£´æÆÀÂÛÊı¾İµ½Êı¾İ¿â¡£
-            comment= form.save(commit=False)
+            # æ£€æŸ¥åˆ°æ•°æ®æ˜¯åˆæ³•çš„ï¼Œè°ƒç”¨è¡¨å•çš„ save æ–¹æ³•ä¿å­˜æ•°æ®åˆ°æ•°æ®åº“ï¼Œ
+            # commit=False çš„ä½œç”¨æ˜¯ä»…ä»…åˆ©ç”¨è¡¨å•çš„æ•°æ®ç”Ÿæˆ Comment æ¨¡å‹ç±»çš„å®ä¾‹ï¼Œä½†è¿˜ä¸ä¿å­˜è¯„è®ºæ•°æ®åˆ°æ•°æ®åº“ã€‚
+            comment = form.save(commit=False)
 
-            # ½«ÆÀÂÛºÍ±»ÆÀÂÛµÄÎÄÕÂ¹ØÁªÆğÀ´¡£
-            comment.post=post
+            # å°†è¯„è®ºå’Œè¢«è¯„è®ºçš„æ–‡ç« å…³è”èµ·æ¥ã€‚
+            comment.post = post
 
-            # ×îÖÕ½«ÆÀÂÛÊı¾İ±£´æ½øÊı¾İ¿â£¬µ÷ÓÃÄ£ĞÍÊµÀıµÄ save ·½·¨
+            # æœ€ç»ˆå°†è¯„è®ºæ•°æ®ä¿å­˜è¿›æ•°æ®åº“ï¼Œè°ƒç”¨æ¨¡å‹å®ä¾‹çš„ save æ–¹æ³•
             comment.save()
 
-            # ÖØ¶¨Ïòµ½ post µÄÏêÇéÒ³£¬Êµ¼ÊÉÏµ± redirect º¯Êı½ÓÊÕÒ»¸öÄ£ĞÍµÄÊµÀıÊ±£¬Ëü»áµ÷ÓÃÕâ¸öÄ£ĞÍÊµÀıµÄ get_absolute_url ·½·¨£¬
-            # È»ºóÖØ¶¨Ïòµ½ get_absolute_url ·½·¨·µ»ØµÄ URL¡£
+            # é‡å®šå‘åˆ° post çš„è¯¦æƒ…é¡µï¼Œå®é™…ä¸Šå½“ redirect å‡½æ•°æ¥æ”¶ä¸€ä¸ªæ¨¡å‹çš„å®ä¾‹æ—¶ï¼Œå®ƒä¼šè°ƒç”¨è¿™ä¸ªæ¨¡å‹å®ä¾‹çš„ get_absolute_url æ–¹æ³•ï¼Œ
+            # ç„¶åé‡å®šå‘åˆ° get_absolute_url æ–¹æ³•è¿”å›çš„ URLã€‚
             return redirect(post)
+
         else:
-            # ¼ì²éµ½Êı¾İ²»ºÏ·¨£¬ÖØĞÂäÖÈ¾ÏêÇéÒ³£¬²¢ÇÒäÖÈ¾±íµ¥µÄ´íÎó¡£
-            # Òò´ËÎÒÃÇ´«ÁËÈı¸öÄ£°å±äÁ¿¸ø detail.html£¬
-            # Ò»¸öÊÇÎÄÕÂ£¨Post£©£¬Ò»¸öÊÇÆÀÂÛÁĞ±í£¬Ò»¸öÊÇ±íµ¥ form
-            # ×¢ÒâÕâÀïÎÒÃÇÓÃµ½ÁË post.comment_set.all() ·½·¨£¬
-            # Õâ¸öÓÃ·¨ÓĞµãÀàËÆÓÚ Post.objects.all()
-            # Æä×÷ÓÃÊÇ»ñÈ¡ÕâÆª post ÏÂµÄµÄÈ«²¿ÆÀÂÛ£¬
-            # ÒòÎª Post ºÍ Comment ÊÇ ForeignKey ¹ØÁªµÄ£¬
-            # Òò´ËÊ¹ÓÃ post.comment_set.all() ·´Ïò²éÑ¯È«²¿ÆÀÂÛ¡£
-            # ¾ßÌåÇë¿´ÏÂÃæµÄ½²½â¡£
-            #post.comment_set.all()µÈ¼ÛÓÚcomment.objects.filter(post=post)
-            comment_list=post.comment_set.all()
-            context={'post':post,
-                     'form':form,
-                     'comment_list':comment_list
-            }
-    # ²»ÊÇ post ÇëÇó£¬ËµÃ÷ÓÃ»§Ã»ÓĞÌá½»Êı¾İ£¬ÖØ¶¨Ïòµ½ÎÄÕÂÏêÇéÒ³¡£
+            # æ£€æŸ¥åˆ°æ•°æ®ä¸åˆæ³•ï¼Œé‡æ–°æ¸²æŸ“è¯¦æƒ…é¡µï¼Œå¹¶ä¸”æ¸²æŸ“è¡¨å•çš„é”™è¯¯ã€‚
+            # å› æ­¤æˆ‘ä»¬ä¼ äº†ä¸‰ä¸ªæ¨¡æ¿å˜é‡ç»™ detail.htmlï¼Œ
+            # ä¸€ä¸ªæ˜¯æ–‡ç« ï¼ˆPostï¼‰ï¼Œä¸€ä¸ªæ˜¯è¯„è®ºåˆ—è¡¨ï¼Œä¸€ä¸ªæ˜¯è¡¨å• form
+            # æ³¨æ„è¿™é‡Œæˆ‘ä»¬ç”¨åˆ°äº† post.comment_set.all() æ–¹æ³•ï¼Œ
+            # è¿™ä¸ªç”¨æ³•æœ‰ç‚¹ç±»ä¼¼äº Post.objects.all()
+            # å…¶ä½œç”¨æ˜¯è·å–è¿™ç¯‡ post ä¸‹çš„çš„å…¨éƒ¨è¯„è®ºï¼Œ
+            # å› ä¸º Post å’Œ Comment æ˜¯ ForeignKey å…³è”çš„ï¼Œ
+            # å› æ­¤ä½¿ç”¨ post.comment_set.all() åå‘æŸ¥è¯¢å…¨éƒ¨è¯„è®ºã€‚
+            # å…·ä½“è¯·çœ‹ä¸‹é¢çš„è®²è§£ã€‚
+            comment_list = post.comment_set.all()
+            context = {'post': post,
+                       'form': form,
+                       'comment_list': comment_list
+                       }
+            return render(request, 'blog/detail.html', context=context)
+            # ä¸æ˜¯ post è¯·æ±‚ï¼Œè¯´æ˜ç”¨æˆ·æ²¡æœ‰æäº¤æ•°æ®ï¼Œé‡å®šå‘åˆ°æ–‡ç« è¯¦æƒ…é¡µã€‚
     return redirect(post)
